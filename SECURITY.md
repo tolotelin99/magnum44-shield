@@ -1,12 +1,13 @@
 # Política de Seguridad
 
-## Versiones Soportadas
 
+## Versiones Soportadas
 Se ofrece soporte activo para la serie de versiones estables actuales de Magnum44 Shield.
 
 | Versión | Soportada |
 | ------- | --------- |
-| v1.x    | Sí        |
+| v2.x    | Sí        |
+| v1.x    | No        |
 | < v1.0  | No        |
 
 ---
