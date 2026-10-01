@@ -84,9 +84,9 @@ alias tor-off='unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY; ec
 
 # 2. Navegador Aislado (Solo para motores Chromium: Brave, Chrome, Edge, Vivaldi)
 # Abre una sesión limpia, sin historial ni cookies, forzando el proxy y resolución DNS remota.
-# NOTA: Ajusta la ruta a tu ejecutable. Estos parámetros NO son compatibles con Firefox.
-alias browser-tor='"C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe" --proxy-server="socks5://127.0.0.1:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE 127.0.0.1" --user-data-dir="./perfil_tor_aislado" &'
-
+# ATENCIÓN OPSEC: En Windows debes usar una RUTA ABSOLUTA en --user-data-dir o el aislamiento fallará.
+# Reemplaza "C:/TU/RUTA/A/TU/PROYECTO" por la ubicación real donde clonaste esta herramienta.
+alias browser-tor='"C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe" --proxy-server="socks5://127.0.0.1:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE 127.0.0.1" --user-data-dir="C:/TU/RUTA/A/TU/PROYECTO/perfil_tor_aislado" &'
 ```
 
 ### ¿Cómo usar los atajos?
