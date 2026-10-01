@@ -82,10 +82,10 @@ Añade las siguientes líneas a tu archivo `~/.bashrc`:
 alias tor-on='export http_proxy="socks5h://127.0.0.1:9050" https_proxy="socks5h://127.0.0.1:9050" HTTP_PROXY="socks5h://127.0.0.1:9050" HTTPS_PROXY="socks5h://127.0.0.1:9050" ALL_PROXY="socks5h://127.0.0.1:9050"; echo "[+] Escudo activado a nivel sistema"'
 alias tor-off='unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY; echo "[-] Escudo desactivado (IP Real)"'
 
-# 2. Navegador Aislado (Brave / Chromium)
+# 2. Navegador Aislado (Solo para motores Chromium: Brave, Chrome, Edge, Vivaldi)
 # Abre una sesión limpia, sin historial ni cookies, forzando el proxy y resolución DNS remota.
-# Nota: Ajusta la ruta a tu ejecutable de Brave según tu sistema.
-alias brave-tor='"C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe" --proxy-server="socks5://127.0.0.1:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE 127.0.0.1" --user-data-dir="./perfil_tor_aislado" &'
+# NOTA: Ajusta la ruta a tu ejecutable. Estos parámetros NO son compatibles con Firefox.
+alias browser-tor='"C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe" --proxy-server="socks5://127.0.0.1:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE 127.0.0.1" --user-data-dir="./perfil_tor_aislado" &'
 
 ```
 
