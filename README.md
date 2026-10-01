@@ -21,8 +21,7 @@ Solo necesitas Python 3 y la librería de gestión de SOCKS.
 
 1. Clona el repositorio en tu sistema local:
 ```bash
-git clone [https://github.com/tolotelin99/magnum44-shield.git](https://github.com/tolotelin99/magnum44-shield.git)
-cd magnum44-shield
+git clone https://github.com/tolotelin99/magnum44-shield.git
 
 ```
 
@@ -93,7 +92,7 @@ alias browser-tor='"C:/Program Files/BraveSoftware/Brave-Browser/Application/bra
 
 * Asegúrate de que `magnum44_shield.py` esté en ejecución.
 * Escribe `tor-on` en tu terminal para que comandos como `curl https://api.ipify.org` salgan con IP anónima.
-* Escribe `brave-tor` para lanzar un navegador desechable, seguro e invisible.
+* Escribe `browser-tor` para lanzar un navegador desechable, seguro e invisible.
 
 ---
 
