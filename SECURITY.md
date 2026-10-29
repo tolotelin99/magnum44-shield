@@ -1,26 +1,55 @@
-# Política de Seguridad
+# 🛡️ Política de Seguridad (Magnum44 Shield)
 
+La seguridad y la integridad operacional (OPSEC) son las principales prioridades de este proyecto. Este documento describe nuestro modelo de amenazas, las políticas de soporte y cómo reportar vulnerabilidades de manera responsable.
 
-## Versiones Soportadas
-Se ofrece soporte activo para la serie de versiones estables actuales de Magnum44 Shield.
+## 📌 Versiones Soportadas
 
-| Versión | Soportada |
-| ------- | --------- |
-| v2.x    | Sí        |
-| v1.x    | No        |
-| < v1.0  | No        |
+Actualmente, solo la última versión del script recibe actualizaciones de seguridad.
 
----
-
-## Reporte de Vulnerabilidades
-
-Si descubre una vulnerabilidad de seguridad o un defecto crítico en Magnum44 Shield, absténgase de divulgarlo públicamente a través de los problemas abiertos del repositorio de manera inmediata. La divulgación responsable garantiza una mitigación adecuada y mantiene la integridad del proyecto.
+| Versión | Soporte de Seguridad | Notas |
+| :--- | :--- | :--- |
+| **v2.0.x** | ✅ Soportada | Arquitectura SOCKS5 directa, sin puente HTTP. |
+| < v2.0 | ❌ Descontinuada | Vulnerable a fugas de WebRTC e Information Disclosure. Se recomienda actualizar inmediatamente. |
 
 ---
 
-## Uso Ético y Legal
+## 🎯 Modelo de Amenazas (Threat Model)
 
-Magnum44 Shield se ha desarrollado exclusivamente con fines educativos, de auditoría de seguridad autorizada y de ingeniería de software defensiva.
+Magnum44 Shield está diseñado específicamente para **Operaciones de Red Team, CTFs y Pentesting**. 
 
-* El autor (tolotelin99) no asume ninguna responsabilidad por el uso indebido, daños o actividades ilegales realizadas con esta utilidad.
-* Los usuarios deben asegurarse de contar con una autorización explícita y por escrito antes de realizar pruebas en cualquier sistema o red que no pertenezca a sus propios entornos controlados.
+**✅ Lo que Magnum44 Shield PROTEGE:**
+* **Ocultamiento de IP de Origen:** Enruta el tráfico TCP de tu terminal a través de la red Tor.
+* **Resolución DNS Segura:** Si se utilizan los alias correctos (`socks5h://`), previene fugas locales de DNS.
+* **Aislamiento de Entorno:** Permite lanzar navegadores sin estado (sin cookies ni historial previo) para auditorías limpias.
+
+**❌ Lo que Magnum44 Shield NO PROTEGE (Fuera del alcance):**
+* **Tráfico No Cifrado (HTTP):** Los nodos de salida de Tor pueden interceptar tráfico. Siempre utiliza protocolos seguros (HTTPS, SSH).
+* **Fugas por Capa de Aplicación:** Si utilizas el proxy en un navegador normal sin las *flags* anti-WebRTC documentadas en el README, tu IP real se filtrará mediante tráfico UDP.
+* **Ataques de día cero (0-days):** El script no protege contra exploits dirigidos al motor del navegador o binarios maliciosos descargados.
+
+---
+
+## 🚨 Avisos de Seguridad Críticos (Security Advisories)
+
+### [Resuelto en v2.0] Riesgo de Fuga por WebRTC y Browser Fingerprinting
+Se detectó que el uso de navegadores basados en Chromium a través de proxys estándar SOCKS5 permite fugas de la IP real mediante el protocolo UDP de WebRTC. 
+* **Solución mitigada:** A partir de la versión 2.0, la documentación oficial exige el uso del parámetro `--force-webrtc-ip-handling-policy=disable_non_proxied_udp` en los alias del navegador para cortar el tráfico UDP local.
+
+### [Resuelto en v2.0] Information Disclosure en Rutas
+Las versiones anteriores quemaban rutas estáticas en el código fuente, revelando información del sistema base del atacante.
+* **Solución mitigada:** La v2.0 implementa búsqueda dinámica de binarios usando variables de entorno y `shutil.which`.
+
+---
+
+## 📬 Cómo reportar una vulnerabilidad
+
+Si descubres un problema que afecte la Seguridad Operacional (OPSEC), permita la filtración de direcciones IP, DNS, o exponga el sistema host, **por favor no abras un "Issue" público**.
+
+Envía un correo electrónico detallado a: **edgareduardotoloza@gmail.com**
+
+**Incluye en tu reporte:**
+1. Descripción detallada de la vulnerabilidad (Ej: Fuga de DNS en Windows 11).
+2. Pasos para reproducir el problema.
+3. Evidencia (Capturas de Wireshark, logs de red, o reportes de browserleaks.com).
+
+Recibirás una respuesta confirmando la recepción del reporte en un plazo máximo de 48 horas.
