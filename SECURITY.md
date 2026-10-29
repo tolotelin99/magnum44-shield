@@ -44,8 +44,7 @@ Las versiones anteriores quemaban rutas estáticas en el código fuente, revelan
 ## 📬 Cómo reportar una vulnerabilidad
 
 Si descubres un problema que afecte la Seguridad Operacional (OPSEC), permita la filtración de direcciones IP, DNS, o exponga el sistema host, **por favor no abras un "Issue" público**.
-
-Envía un correo electrónico detallado a: **edgareduardotoloza@gmail.com**
+comentanos y lo resolveremos inmediatamente.
 
 **Incluye en tu reporte:**
 1. Descripción detallada de la vulnerabilidad (Ej: Fuga de DNS en Windows 11).
