@@ -60,42 +60,44 @@ def find_tor_executable(custom_path=None):
     return None
 
 def abrir_navegador_tor():
-    """Abre el navegador de uso diario del usuario con el motor de Tor sin aislar el perfil."""
+    """Detecta automáticamente el navegador disponible en el sistema (Brave, Chrome o Edge) y abre una ventana independiente con Tor."""
     url = "https://check.torproject.org"
     user_home = os.path.expanduser("~")
     
-    # Rutas comunes en Windows para Brave, Chrome y Edge
+    # Rutas comunes en Windows evaluando preferencias de uso (Brave -> Chrome -> Edge)
     candidatos = [
         os.path.join(user_home, r"AppData\Local\BraveSoftware\Brave-Browser\Application\brave.exe"),
         r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe",
+        os.path.join(user_home, r"AppData\Local\Google\Chrome\Application\chrome.exe"),
         r"C:\Program Files\Google\Chrome\Application\chrome.exe",
         r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-        os.path.join(user_home, r"AppData\Local\Google\Chrome\Application\chrome.exe"),
-        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+        os.path.join(user_home, r"AppData\Local\Microsoft\Edge\Application\msedge.exe"),
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
     ]
     
     browser_path = next((path for path in candidatos if os.path.isfile(path)), None)
     
     if not browser_path:
-        print("[!] No se encontró ningún navegador compatible para lanzamiento automático.")
+        print("[!] No se encontró ningún navegador compatible (Brave, Chrome o Edge) en el sistema.")
         return
 
-    print(f"[*] Navegador detectado: {os.path.basename(browser_path)}")
+    print(f"[*] Navegador detectado para la sesión: {os.path.basename(browser_path)}")
     
-    # Argumentos limpios: proxy y WebRTC seguro utilizando el perfil normal del usuario
+    # Argumentos optimizados: proxy SOCKS5, WebRTC seguro y ventana nueva independiente
     cmd = [
         browser_path,
         f"--proxy-server=socks5://{TOR_PROXY_HOST}:{TOR_PROXY_PORT}",
         "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
         "--disable-background-networking",
         "--disable-sync",
+        "--new-window",
         url
     ]
     
     try:
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("[+] ¡Navegador abierto con el motor de Tor en segundo plano!")
+        print("[+] ¡Ventana independiente abierta con éxito a través del motor Tor!")
     except Exception as e:
         print(f"[!] Error al iniciar el navegador: {e}")
 
@@ -192,7 +194,7 @@ def run_shield(tor_path=None):
     print("    (NOTA: En Git Bash, usa 'winpty python magnum44_shield.py')")
     print("-" * 65)
 
-    # Lanzamiento automático del navegador de uso diario con perfil normal enrutado por Tor
+    # Lanzamiento automático con detección dinámica de navegador y ventana independiente
     abrir_navegador_tor()
 
     try:
