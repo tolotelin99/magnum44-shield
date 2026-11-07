@@ -19,16 +19,25 @@ TOR_PROXY_HOST = "127.0.0.1"
 TOR_PROXY_PORT = 9050  # Puerto estándar del demonio de Tor autónomo
 tor_process = None
 
-
 def is_port_in_use(port):
     """Verifica si un puerto local ya está ocupado."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex((TOR_PROXY_HOST, port)) == 0
 
+def validate_tor_executable(exec_path):
+    """Valida estrictamente que el ejecutable sea el binario de Tor."""
+    if not exec_path or not os.path.exists(exec_path):
+        return False
+    # Evitar command injection validando el nombre del archivo
+    basename = os.path.basename(exec_path).lower()
+    if basename not in ["tor.exe", "tor"]:
+        return False
+    return True
 
 def start_tor_daemon(custom_tor_path=None):
     """Inicia el motor de Tor localizando el ejecutable de forma dinámica y sigilosa."""
     global tor_process, TOR_PROXY_PORT
+
     ports_to_check = [9050, 9150]
 
     # 1. Verificar si ya hay un circuito activo
@@ -41,7 +50,7 @@ def start_tor_daemon(custom_tor_path=None):
     print("[*] No se detectó Tor activo. Buscando motor de red...")
     tor_executable = None
 
-    if custom_tor_path and os.path.exists(custom_tor_path):
+    if custom_tor_path and validate_tor_executable(custom_tor_path):
         tor_executable = custom_tor_path
     else:
         # OPSEC: Cálculo dinámico de rutas. Sin strings quemados de usuarios o SO.
@@ -58,10 +67,10 @@ def start_tor_daemon(custom_tor_path=None):
         ]
 
         if shutil.which("tor"):
-            tor_executable = "tor"
+            tor_executable = shutil.which("tor")
         else:
             for path in common_tor_paths:
-                if os.path.exists(path):
+                if validate_tor_executable(path):
                     tor_executable = path
                     break
 
@@ -93,7 +102,6 @@ def start_tor_daemon(custom_tor_path=None):
         print(f"[-] Error crítico al inyectar el motor: {e}")
         return False
 
-
 def stop_tor_daemon():
     """Mata el proceso limpiamente evitando puertos huérfanos."""
     global tor_process
@@ -106,7 +114,6 @@ def stop_tor_daemon():
             tor_process.kill()
         print("[+] Rastros eliminados. Motor finalizado.")
 
-
 def get_current_exit_ip(use_proxy=False):
     """Comprueba la IP real o la IP de salida de la red Tor."""
     if use_proxy and not HAS_SOCKS:
@@ -117,8 +124,6 @@ def get_current_exit_ip(use_proxy=False):
             print("[*] Enrutando sonda a través de SOCKS5...")
             socks.set_default_proxy(socks.SOCKS5, TOR_PROXY_HOST, TOR_PROXY_PORT, rdns=True)
             socket.socket = socks.socksocket
-        else:
-            socket.socket = socket.socket
 
         req = urllib.request.Request(
             "https://api.ipify.org?format=json",
@@ -128,7 +133,6 @@ def get_current_exit_ip(use_proxy=False):
             return response.read().decode("utf-8")
     except Exception as e:
         return f"[-] Error de red/OPSEC: {e}"
-
 
 def run_shield(tor_path=None):
     """Mantiene vivo el túnel y escucha la señal de cierre."""
@@ -155,7 +159,6 @@ def run_shield(tor_path=None):
         stop_tor_daemon()
         sys.exit(0)
 
-
 def main():
     parser = argparse.ArgumentParser(description="Magnum44 Shield - Gestor táctico de anonimato Tor")
     parser.add_argument("--check-ip", action="store_true", help="Audita la IP de salida de Tor")
@@ -170,7 +173,6 @@ def main():
         return
 
     run_shield(args.tor_path)
-
 
 if __name__ == "__main__":
     main()
